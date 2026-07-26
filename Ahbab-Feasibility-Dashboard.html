@@ -12,7 +12,8 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0}
-  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.5}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.5;overflow-x:hidden}
+  input,select{max-width:100%}
   h1,h2,h3,h4{margin:0;font-weight:700;color:var(--navy)}
   .wrap{max-width:960px;margin:0 auto;padding:22px 18px 90px}
   .top{border-left:5px solid var(--gold);padding:4px 0 4px 14px;margin-bottom:18px}
@@ -39,9 +40,9 @@
   .field>label{display:block;font-weight:600;font-size:14.5px;margin-bottom:3px}
   .field .desc{font-size:12.5px;color:var(--mut);margin-bottom:8px}
   .inpwrap{display:flex;align-items:center;gap:10px}
-  .money{position:relative;display:inline-flex;align-items:center}
+  .money{position:relative;display:flex;align-items:center;max-width:320px}
   .money .cur{position:absolute;left:12px;font-size:14px;color:var(--mut);font-weight:600;pointer-events:none}
-  input.big{font-size:19px;font-weight:700;padding:12px 14px 12px 46px;border:2px solid var(--line);border-radius:10px;width:260px;font-variant-numeric:tabular-nums;color:var(--navy)}
+  input.big{font-size:19px;font-weight:700;padding:12px 14px 12px 46px;border:2px solid var(--line);border-radius:10px;width:100%;font-variant-numeric:tabular-nums;color:var(--navy)}
   input.mid{font-size:16px;font-weight:600;padding:9px 11px;border:2px solid var(--line);border-radius:9px;width:120px;text-align:right;font-variant-numeric:tabular-nums;color:var(--navy)}
   input.pctbox{width:80px}
   input.big:focus,input.mid:focus,input.cell:focus,input.txt:focus{outline:none;border-color:var(--navy2);box-shadow:0 0 0 3px rgba(44,80,121,.12)}
@@ -83,7 +84,7 @@
   input.cell.pc{width:52px}
   table.gr tfoot td{font-weight:700;background:#f7f9fb;color:var(--navy)}
   .txt{font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;width:100%;min-width:150px}
-  .exphead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  .exphead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:8px}
   select.sel{font-size:12.5px;padding:6px 7px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
   .exprow{border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:9px;background:#fbfcfd}
   .exprow .er1{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
@@ -96,8 +97,8 @@
   .expyears label{font-size:11px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px}
   .miniin{width:96px;padding:7px 8px;text-align:right;border:1px solid var(--line);border-radius:7px;font-size:12.5px;font-weight:600;color:var(--navy)}
   .warnmsg{background:var(--red-l);color:var(--red);font-size:13px;font-weight:600;padding:10px 14px;border-radius:8px;margin-top:10px;display:none}
-  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--line)}
-  .nav .l{display:flex;gap:10px}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--line);flex-wrap:wrap;gap:10px}
+  .nav .l{display:flex;gap:10px;flex-wrap:wrap}
   .verdict{font-size:14px;font-weight:700;padding:10px 16px;border-radius:24px;display:inline-block;margin-bottom:14px}
   .verdict.go{background:var(--green-l);color:var(--green)}.verdict.warn{background:#fdf3e0;color:var(--gold-d)}.verdict.no{background:var(--red-l);color:var(--red)}
   .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
@@ -136,6 +137,42 @@
   .pill{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:10px;background:var(--gold);color:#3a2c05;margin-right:4px}
   .flags{list-style:none;padding:0;margin:0}.flags li{font-size:12.5px;padding:9px 0;border-bottom:1px dashed var(--line)}
   .foot{font-size:11px;color:var(--mut);text-align:center;margin-top:28px;padding-top:16px;border-top:1px solid var(--line)}
+
+  /* ===== Foldables & very narrow screens: Galaxy Fold cover ~280px → unfolded ~900px ===== */
+  @media(max-width:600px){
+    /* prevent Android/Samsung Internet zoom-on-focus by keeping tap targets >=16px */
+    input.cell,input.miniin,.txt,.seats,.prow .seats{font-size:16px}
+    .livebar{flex-wrap:wrap;justify-content:flex-start}
+    .presets{gap:6px}
+    .rcard .big{font-size:23px}
+  }
+  @media(max-width:520px){
+    .stepdot{flex:1 1 34px;min-width:34px;padding:7px 3px;justify-content:center;gap:0}
+    .stepdot .n{width:22px;height:22px;font-size:11px}
+    .step h2{font-size:19px}
+    .step{padding:20px 16px}
+  }
+  @media(max-width:420px){
+    .wrap{padding:16px 11px 84px}
+    .step{padding:16px 13px}
+    .top h1{font-size:20px}
+    .nav{flex-direction:column;align-items:stretch}
+    .nav .l{width:100%;justify-content:space-between}
+    .nav .btn.primary{width:100%;text-align:center;order:-1}   /* primary action on top, full width */
+    .exphead{flex-direction:column;align-items:flex-start}
+    .exprow .er1,.exprow .er2{gap:8px}
+    .rcard .mrow{gap:8px}
+    table.gr th:first-child,table.gr td:first-child{min-width:150px}
+    .cards{gap:10px}
+  }
+  @media(max-width:340px){
+    .wrap{padding:13px 8px 80px}
+    .stepdot{flex:1 1 30px;min-width:30px;padding:6px 2px}
+    .stepdot .n{width:20px;height:20px;font-size:10px}
+    .rcard .mrow{flex-wrap:wrap}
+    .rcard .mrow div{flex:1 0 45%}
+    .step h2{font-size:18px}
+  }
 </style>
 </head>
 <body>
