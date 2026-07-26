@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahbab Health Education Institute — Feasibility Builder</title>
+<style>
+  :root{
+    --navy:#1f3a5f;--navy2:#2c5079;--gold:#c8a24a;--gold-d:#a8842f;
+    --green:#3f7d54;--green-l:#e4efe8;--red:#b0433c;--red-l:#f6e6e5;
+    --ink:#22303f;--mut:#66707a;--line:#e2e6ea;--bg:#eef1f4;--card:#fff;--navy-l:#eaeff5;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);font-size:15px;line-height:1.5}
+  h1,h2,h3,h4{margin:0;font-weight:700;color:var(--navy)}
+  .wrap{max-width:960px;margin:0 auto;padding:22px 18px 90px}
+  .top{border-left:5px solid var(--gold);padding:4px 0 4px 14px;margin-bottom:18px}
+  .top .k{font-size:11px;letter-spacing:1.6px;color:var(--gold-d);font-weight:700;text-transform:uppercase}
+  .top h1{font-size:23px;line-height:1.15;margin-top:4px}
+  .top .s{color:var(--mut);font-size:12.5px;margin-top:4px}
+  .steps{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+  .stepdot{flex:1;min-width:88px;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:9px;cursor:pointer;border:1px solid var(--line);background:#fff;transition:.15s}
+  .stepdot .n{width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--mut);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+  .stepdot .t{font-size:11.5px;font-weight:600;color:var(--mut);line-height:1.1}
+  .stepdot.active{border-color:var(--navy);background:var(--navy);box-shadow:0 2px 8px rgba(31,58,95,.18)}
+  .stepdot.active .n{background:var(--gold);color:#3a2c05}.stepdot.active .t{color:#fff}
+  .stepdot.done .n{background:var(--green);color:#fff}.stepdot.done .t{color:var(--ink)}
+  @media(max-width:780px){.stepdot .t{display:none}.stepdot{min-width:0;justify-content:center}}
+  .livebar{display:flex;align-items:center;gap:8px;justify-content:flex-end;font-size:12px;color:var(--mut);margin:8px 2px 16px}
+  .livebar b{color:var(--navy);font-variant-numeric:tabular-nums}
+  .step{display:none;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:24px 26px;box-shadow:0 1px 3px rgba(20,40,70,.05)}
+  .step.show{display:block;animation:fade .25s}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .step .eyebrow{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--gold-d);font-weight:700}
+  .step h2{font-size:22px;margin:6px 0 6px}
+  .step .lead{color:var(--mut);font-size:14px;margin-bottom:18px;max-width:660px}
+  .field{margin-bottom:16px}
+  .field>label{display:block;font-weight:600;font-size:14.5px;margin-bottom:3px}
+  .field .desc{font-size:12.5px;color:var(--mut);margin-bottom:8px}
+  .inpwrap{display:flex;align-items:center;gap:10px}
+  .money{position:relative;display:inline-flex;align-items:center}
+  .money .cur{position:absolute;left:12px;font-size:14px;color:var(--mut);font-weight:600;pointer-events:none}
+  input.big{font-size:19px;font-weight:700;padding:12px 14px 12px 46px;border:2px solid var(--line);border-radius:10px;width:260px;font-variant-numeric:tabular-nums;color:var(--navy)}
+  input.mid{font-size:16px;font-weight:600;padding:9px 11px;border:2px solid var(--line);border-radius:9px;width:120px;text-align:right;font-variant-numeric:tabular-nums;color:var(--navy)}
+  input.pctbox{width:80px}
+  input.big:focus,input.mid:focus,input.cell:focus,input.txt:focus{outline:none;border-color:var(--navy2);box-shadow:0 0 0 3px rgba(44,80,121,.12)}
+  .suffix{font-size:14px;color:var(--mut)}
+  .readout{font-size:13px;color:var(--green);font-weight:600;margin-top:6px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 28px}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .subhead{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--gold-d);margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+  .presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .btn{font-size:12.5px;padding:8px 13px;border:1px solid var(--line);background:#fff;border-radius:8px;cursor:pointer;color:var(--navy2);font-weight:600}
+  .btn:hover{background:var(--navy-l)}
+  .btn.primary{background:var(--navy);color:#fff;border-color:var(--navy);font-size:15px;padding:12px 24px;border-radius:10px}
+  .btn.primary:hover{background:var(--navy2)}
+  .btn.ghost{background:#fff}
+  .btn.mini{font-size:11.5px;padding:5px 10px}
+  .btn.add{background:var(--green-l);color:var(--green);border-color:#c5ddce}
+  .deptgroup{margin-bottom:14px}
+  .dh{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--gold-d);padding:6px 0 5px;border-bottom:1px solid var(--line);margin-bottom:4px;display:flex;justify-content:space-between}
+  .dh .seatlbl{color:var(--mut);font-weight:600;letter-spacing:0;text-transform:none}
+  .prow{display:flex;align-items:center;gap:11px;padding:5px 8px;border-radius:8px}
+  .prow:hover{background:var(--navy-l)}
+  .prow input[type=checkbox]{width:19px;height:19px;accent-color:var(--navy);cursor:pointer;flex-shrink:0}
+  .prow .pn{flex:1;font-size:13.5px;cursor:pointer}
+  .prow .pn .yrs{color:var(--mut);font-size:11.5px}
+  .prow .pn .fee{color:var(--mut);font-size:11px;display:block}
+  .prow .seats{width:64px;padding:7px 8px;text-align:right;border:1px solid var(--line);border-radius:7px;font-size:13.5px;font-weight:600;color:var(--navy)}
+  .prow.off{opacity:.45}
+  .tally{background:var(--navy-l);border-radius:9px;padding:11px 14px;font-size:13px;margin-top:12px;color:var(--ink)}
+  .tally b{color:var(--navy)}
+  .gridscroll{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+  table.gr{border-collapse:collapse;font-size:13px;width:100%;min-width:520px}
+  table.gr th,table.gr td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:center;white-space:nowrap}
+  table.gr th{background:var(--navy);color:#fff;font-weight:600;font-size:11.5px;position:sticky;left:auto}
+  table.gr th:first-child,table.gr td:first-child{text-align:left;background:#fff;position:sticky;left:0;z-index:1;border-right:1px solid var(--line);font-weight:600;min-width:210px}
+  table.gr thead th:first-child{background:var(--navy)}
+  table.gr tr:hover td{background:var(--navy-l)}
+  table.gr tr:hover td:first-child{background:#f2f6fb}
+  input.cell{width:58px;padding:6px 5px;text-align:right;border:1px solid var(--line);border-radius:6px;font-size:12.5px;font-weight:600;color:var(--navy);font-variant-numeric:tabular-nums}
+  input.cell.pc{width:52px}
+  table.gr tfoot td{font-weight:700;background:#f7f9fb;color:var(--navy)}
+  .txt{font-size:13px;padding:7px 9px;border:1px solid var(--line);border-radius:7px;width:100%;min-width:150px}
+  .exphead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  select.sel{font-size:12.5px;padding:6px 7px;border:1px solid var(--line);border-radius:7px;background:#fff;color:var(--ink)}
+  .exprow{border:1px solid var(--line);border-radius:10px;padding:11px 12px;margin-bottom:9px;background:#fbfcfd}
+  .exprow .er1{display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+  .exprow .er2{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:9px}
+  .exprow .lbl{flex:1;min-width:160px}
+  .swtog{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--mut)}
+  .del{color:var(--red);border:1px solid #e6c6c3;background:#fff;border-radius:7px;padding:6px 9px;cursor:pointer;font-size:12px;font-weight:600}
+  .del:hover{background:var(--red-l)}
+  .expyears{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+  .expyears label{font-size:11px;color:var(--mut);display:flex;flex-direction:column;align-items:center;gap:2px}
+  .miniin{width:96px;padding:7px 8px;text-align:right;border:1px solid var(--line);border-radius:7px;font-size:12.5px;font-weight:600;color:var(--navy)}
+  .warnmsg{background:var(--red-l);color:var(--red);font-size:13px;font-weight:600;padding:10px 14px;border-radius:8px;margin-top:10px;display:none}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-top:24px;padding-top:16px;border-top:1px solid var(--line)}
+  .nav .l{display:flex;gap:10px}
+  .verdict{font-size:14px;font-weight:700;padding:10px 16px;border-radius:24px;display:inline-block;margin-bottom:14px}
+  .verdict.go{background:var(--green-l);color:var(--green)}.verdict.warn{background:#fdf3e0;color:var(--gold-d)}.verdict.no{background:var(--red-l);color:var(--red)}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px}
+  @media(max-width:720px){.cards{grid-template-columns:1fr}}
+  .rcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 17px;position:relative;overflow:hidden}
+  .rcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px}
+  .rcard.best::before{background:var(--green)}.rcard.exp::before{background:var(--navy)}.rcard.worst::before{background:var(--red)}
+  .rcard .ct{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px}
+  .rcard.best .ct{color:var(--green)}.rcard.exp .ct{color:var(--navy)}.rcard.worst .ct{color:var(--red)}
+  .rcard .big{font-size:26px;font-weight:800;margin:5px 0 1px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}
+  .rcard .cap{font-size:11.5px;color:var(--mut)}
+  .rcard .mrow{display:flex;gap:12px;margin-top:12px;padding-top:11px;border-top:1px solid var(--line)}
+  .rcard .mrow div{flex:1}.rcard .mrow .v{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums}
+  .rcard .mrow .l{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px}
+  .rsect{margin-bottom:24px}
+  .rsect h3{font-size:16px;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center}
+  .rsect .sh{font-size:12.5px;color:var(--mut);margin-bottom:12px}
+  .rsect .edit{font-size:11.5px;color:var(--navy2);cursor:pointer;font-weight:600;border:1px solid var(--line);padding:3px 9px;border-radius:14px;background:#fff}
+  .rsect .edit:hover{background:var(--navy-l)}
+  .chartwrap{width:100%;overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--mut);margin-bottom:8px}
+  .legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+  table.data{width:100%;border-collapse:collapse;font-size:12.5px;font-variant-numeric:tabular-nums;background:#fff}
+  table.data th,table.data td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+  table.data th:first-child,table.data td:first-child{text-align:left}
+  table.data thead th{background:var(--navy);color:#fff;font-weight:600;font-size:11.5px}
+  table.data tr.rev td{background:#eef4ee;font-weight:700;color:var(--green)}
+  table.data tr.pat td{background:var(--navy);color:#fff;font-weight:700}
+  table.data tr.strong td{font-weight:700}table.data tr.sub td{color:var(--mut);font-size:11.5px}
+  .tscroll{overflow-x:auto;border:1px solid var(--line);border-radius:12px}
+  .tabs{display:flex;gap:8px;margin-bottom:12px}
+  .tab{padding:7px 15px;border:1px solid var(--line);border-radius:22px;cursor:pointer;font-size:12.5px;font-weight:600;color:var(--mut);background:#fff}
+  .tab.active{background:var(--navy);color:#fff;border-color:var(--navy)}
+  .tab.best.active{background:var(--green);border-color:var(--green)}.tab.worst.active{background:var(--red);border-color:var(--red)}
+  .note{font-size:12.5px;color:var(--ink);background:var(--navy-l);border-left:3px solid var(--gold);padding:11px 14px;border-radius:0 8px 8px 0;margin-top:12px}
+  .pill{display:inline-block;font-size:10.5px;font-weight:700;padding:1px 7px;border-radius:10px;background:var(--gold);color:#3a2c05;margin-right:4px}
+  .flags{list-style:none;padding:0;margin:0}.flags li{font-size:12.5px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .foot{font-size:11px;color:var(--mut);text-align:center;margin-top:28px;padding-top:16px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="k">Financial Feasibility · Step-by-step builder</div>
+    <h1>Ahbab Health Education Institute</h1>
+    <div class="s">Islamabad · fees from the Sarhad University Fee Structure 2025-26 · all amounts in PKR</div>
+  </div>
+  <div class="steps" id="steps"></div>
+  <div class="livebar" id="livebar"></div>
+
+  <!-- STEP 1 -->
+  <section class="step show" data-step="0">
+    <div class="eyebrow">Step 1 of 7</div>
+    <h2>How much are you investing?</h2>
+    <p class="lead">The money you put in up front — fit-out, equipment, deposits and cash to survive the first year. Everything else measures what you get back on it.</p>
+    <div class="field"><label>Total investment</label><div class="desc">Your study used ten crore (PKR 100,000,000).</div>
+      <div class="money"><span class="cur">PKR</span><input type="number" id="investment" class="big" value="100000000" step="1000000"></div>
+      <div class="readout" id="invReadout"></div></div>
+    <div class="grid">
+      <div class="field"><label>How many years to project</label><div class="desc">The study runs five years.</div>
+        <div class="inpwrap"><input type="number" id="horizon" class="mid" value="5" min="3" max="8"><span class="suffix">years</span></div></div>
+      <div class="field"><label>Corporate tax rate</label><div class="desc">Year-1 losses carry forward to reduce later tax.</div>
+        <div class="inpwrap"><input type="number" id="taxRate" class="mid pctbox" value="10" step="0.5"><span class="suffix">%</span></div></div>
+    </div>
+  </section>
+
+  <!-- STEP 2 -->
+  <section class="step" data-step="1">
+    <div class="eyebrow">Step 2 of 7</div>
+    <h2>Which courses will you offer?</h2>
+    <p class="lead">Tick the programmes you'll run. Fees and duration are pulled straight from the Sarhad sheet. "Seats" here just seeds the enrolment grid in the next step — you can fine-tune every year there.</p>
+    <div class="presets">
+      <button class="btn" data-preset="study">Your 4 health programmes</button>
+      <button class="btn" data-preset="allhealth">All health</button>
+      <button class="btn" data-preset="all">Everything</button>
+      <button class="btn ghost" data-preset="none">Clear all</button>
+    </div>
+    <div id="catalogue"></div>
+    <div class="tally" id="progTally"></div>
+    <div class="warnmsg" id="progWarn">Pick at least one programme to continue.</div>
+  </section>
+
+  <!-- STEP 3 -->
+  <section class="step" data-step="2">
+    <div class="eyebrow">Step 3 of 7</div>
+    <h2>New students each year — per programme</h2>
+    <p class="lead">Set how many <b>new</b> students each programme takes in, every year. Leave early years at 0 to start a programme later. Students stay until they graduate; the campus total below adds up the cohorts for you.</p>
+    <div class="presets">
+      <span class="suffix" style="align-self:center">Quick-fill seed:</span>
+      <span class="suffix" style="align-self:center">Year 1</span><input type="number" id="fillY1" class="mid pctbox" value="80" step="5" style="width:70px"><span class="suffix" style="align-self:center">%</span>
+      <span class="suffix" style="align-self:center">· Year 2+</span><input type="number" id="fillSteady" class="mid pctbox" value="100" step="5" style="width:70px"><span class="suffix" style="align-self:center">%</span>
+      <button class="btn mini" id="reseedBtn">↺ Fill grid from seats</button>
+    </div>
+    <div class="gridscroll"><table class="gr" id="intakeGrid"></table></div>
+    <div class="tally" id="enrolTally"></div>
+  </section>
+
+  <!-- STEP 4 -->
+  <section class="step" data-step="3">
+    <div class="eyebrow">Step 4 of 7</div>
+    <h2>Scholarship policy — per programme</h2>
+    <p class="lead">Set the male and female discount for each programme, and the share of students covered each year (coverage). The discount is applied to that student's yearly fee.</p>
+    <div class="field" style="max-width:320px"><label>Female share of students</label><div class="desc">Blends the male / female rates below.</div>
+      <div class="inpwrap"><input type="number" id="femaleRatio" class="mid pctbox" value="50" step="5"><span class="suffix">% female</span></div></div>
+    <div class="subhead">Discount % &amp; coverage % — per programme, per year</div>
+    <div class="gridscroll"><table class="gr" id="scholGrid"></table></div>
+    <div class="tally" id="scholTally"></div>
+  </section>
+
+  <!-- STEP 5 -->
+  <section class="step" data-step="4">
+    <div class="eyebrow">Step 5 of 7</div>
+    <h2>Your costs — add or remove anything</h2>
+    <p class="lead">Every line starts from your study. Change any value, delete lines you don't need, or add your own. Each line has a <b>behaviour</b> that decides how it grows, and a <b>swing</b> toggle for whether it moves in the best/worst cases.</p>
+
+    <div class="exphead">
+      <div class="subhead" style="border:none;margin:0;padding:0">Staffing roster</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <label class="swtog"><input type="checkbox" id="staffSwing" checked> salaries swing in best/worst</label>
+        <button class="btn add" id="addStaffBtn">+ Add a person / role</button>
+      </div>
+    </div>
+    <p class="desc" style="margin:-2px 0 10px">Add every role, its monthly salary, and how many you employ each year. The salary bill is worked out for you and becomes the Salaries line in the P&amp;L.</p>
+    <div class="gridscroll"><table class="gr" id="staffGrid"></table></div>
+
+    <div class="exphead" style="margin-top:22px">
+      <div class="subhead" style="border:none;margin:0;padding:0">Other cost lines</div>
+      <button class="btn add" id="addExpBtn">+ Add a cost line</button>
+    </div>
+    <div id="expList"></div>
+    <div class="tally" id="costTally"></div>
+  </section>
+
+  <!-- STEP 6 -->
+  <section class="step" data-step="5">
+    <div class="eyebrow">Step 6 of 7</div>
+    <h2>The good day and the bad day</h2>
+    <p class="lead">The feasibility runs three times. Only income and costs shift. A cost line moves only if its "swing" box is ticked (Step 5) — so marketing and statutory fees can be held steady.</p>
+    <div class="grid">
+      <div class="field"><label style="color:var(--green)">Best case — income up</label><div class="inpwrap"><input type="number" id="incUp" class="mid pctbox" value="10" step="1"><span class="suffix">% higher</span></div></div>
+      <div class="field"><label style="color:var(--green)">Best case — costs down</label><div class="inpwrap"><input type="number" id="costDown" class="mid pctbox" value="5" step="1"><span class="suffix">% lower</span></div></div>
+      <div class="field"><label style="color:var(--red)">Worst case — income down</label><div class="inpwrap"><input type="number" id="incDown" class="mid pctbox" value="10" step="1"><span class="suffix">% lower</span></div></div>
+      <div class="field"><label style="color:var(--red)">Worst case — costs up</label><div class="inpwrap"><input type="number" id="costUp" class="mid pctbox" value="7" step="1"><span class="suffix">% higher</span></div></div>
+    </div>
+    <div class="tally">When you're ready, hit <b>See my feasibility study →</b>.</div>
+  </section>
+
+  <!-- STEP 7 -->
+  <section class="step" data-step="6">
+    <div class="eyebrow">Step 7 of 7 · Your feasibility study</div>
+    <h2 id="resTitle">Results</h2>
+    <div id="verdict" class="verdict go">—</div>
+    <div class="sh" id="setupline" style="color:var(--mut);font-size:13px;margin-bottom:16px"></div>
+    <div class="cards" id="cards"></div>
+    <div class="rsect"><h3>Five-year profit vs the money you put in <span class="edit" data-goto="0">✎ investment</span></h3>
+      <div class="sh">Each bar is total after-tax profit. The gold line is your investment.</div>
+      <div class="chartwrap" id="chartProfit"></div></div>
+    <div class="rsect"><h3>When your money comes back <span class="edit" data-goto="2">✎ enrolment</span></h3>
+      <div class="sh">Cumulative after-tax profit. Where a line crosses the gold line is payback.</div>
+      <div class="legend"><span><i style="background:var(--green)"></i>Best</span><span><i style="background:var(--navy)"></i>Expected</span><span><i style="background:var(--red)"></i>Worst</span><span><i style="background:var(--gold)"></i>Investment</span></div>
+      <div class="chartwrap" id="chartCumul"></div></div>
+    <div class="rsect"><h3>Income vs costs — expected case <span class="edit" data-goto="4">✎ costs</span></h3>
+      <div class="sh">The widening gap between the bars is the business case.</div>
+      <div class="legend"><span><i style="background:var(--navy)"></i>Revenue</span><span><i style="background:#9aa7b4"></i>Total costs</span><span><i style="background:var(--gold)"></i>Students</span></div>
+      <div class="chartwrap" id="chartIncome"></div></div>
+    <div class="rsect"><h3>The three cases compared</h3><div class="tscroll"><table class="data" id="compareTable"></table></div></div>
+    <div class="rsect"><h3>Full profit &amp; loss statement</h3><div class="sh">Year-by-year — switch the scenario.</div>
+      <div class="tabs" id="plTabs"><div class="tab best" data-sc="best">Best</div><div class="tab exp active" data-sc="exp">Expected</div><div class="tab worst" data-sc="worst">Worst</div></div>
+      <div class="tscroll"><table class="data" id="plTable"></table></div><div class="note" id="plNote"></div></div>
+    <div class="rsect"><h3>Reality checks the numbers don't show</h3><ul class="flags" id="flags"></ul></div>
+    <div class="foot">Built from your Financial Feasibility study &amp; the Sarhad University Fee Structure 2025-26 (Islamabad). A planning model, not a substitute for professional accounting or legal advice. · <span id="stamp"></span></div>
+  </section>
+
+  <div class="nav">
+    <div class="l">
+      <button class="btn ghost" id="backBtn">← Back</button>
+      <button class="btn ghost" id="startOver">↺ Start over</button>
+      <button class="btn ghost" id="printBtn" style="display:none">⎙ Print / PDF</button>
+    </div>
+    <button class="btn primary" id="nextBtn">Next →</button>
+  </div>
+</div>
+
+<script>
+/* ===== CATALOGUE — fees net of security, per year of study; totals reconcile to the sheet ===== */
+const ALLIED_4YR=[245000,230000,240000,250000], CS_4YR=[245000,230000,230000,230000], ENG_4YR=[161000,146000,146000,146000];
+const CATALOG=[
+ {id:'pharmd',dept:'Pharmacy',sch:'pharmacy',name:'Doctor of Pharmacy (Pharm-D)',years:5,fee:[353000,338000,338000,338000,348000],cat:'health',tot:'1,725,000'},
+ {id:'bsn',dept:'Nursing Sciences',sch:'nursing',name:'BS Nursing',years:4,fee:[365000,370000,370000,370000],cat:'health',tot:'1,485,000'},
+ {id:'dpt',dept:'Allied Health',sch:'allied',name:'Doctor of Physiotherapy (DPT)',years:5,fee:[289400,274400,294400,294400,294400],cat:'health',tot:'1,457,000'},
+ {id:'radio',dept:'Allied Health',sch:'allied',name:'BS Radiology & Imaging Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'mlt',dept:'Allied Health',sch:'allied',name:'BS Medical Lab Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'anes',dept:'Allied Health',sch:'allied',name:'BS Anesthesia Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'htech',dept:'Allied Health',sch:'allied',name:'BS Health Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'dental',dept:'Allied Health',sch:'allied',name:'BS Dental Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'emerg',dept:'Allied Health',sch:'allied',name:'BS Emergency & Intensive Care Tech',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'nutri',dept:'Allied Health',sch:'allied',name:'BS Nutrition & Dietetics',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'cardio',dept:'Allied Health',sch:'allied',name:'BS Cardiology Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'surg',dept:'Allied Health',sch:'allied',name:'BS Surgical Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'opto',dept:'Allied Health',sch:'allied',name:'BS Optometry Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'perf',dept:'Allied Health',sch:'allied',name:'BS Cardiac Perfusion Technology',years:4,fee:ALLIED_4YR,cat:'health',tot:'975,000'},
+ {id:'admlt',dept:'Allied Health',sch:'allied',name:'AD Medical Lab Technology',years:2,fee:[245000,230000],cat:'health',tot:'485,000'},
+ {id:'bscs',dept:'Computer Science & IT',sch:'cs',name:'BS Computer Science',years:4,fee:CS_4YR,cat:'nonhealth',tot:'945,000'},
+ {id:'bsai',dept:'Computer Science & IT',sch:'cs',name:'BS Artificial Intelligence',years:4,fee:CS_4YR,cat:'nonhealth',tot:'945,000'},
+ {id:'bca',dept:'Computer Science & IT',sch:'comparts',name:'Bachelor of Computer Arts',years:4,fee:ENG_4YR,cat:'nonhealth',tot:'609,000'},
+ {id:'aden',dept:'English',sch:'english',name:'AD English',years:2,fee:[161000,146000],cat:'nonhealth',tot:'317,000'},
+ {id:'bseng',dept:'English',sch:'english',name:'BS English Language & Literature',years:4,fee:ENG_4YR,cat:'nonhealth',tot:'609,000'},
+];
+const BYID={}; CATALOG.forEach(p=>BYID[p.id]=p);
+const SCH_DEFAULT={pharmacy:{m:40,f:45},nursing:{m:25,f:30},allied:{m:35,f:40},cs:{m:30,f:35},comparts:{m:25,f:30},english:{m:20,f:25}};
+const STUDY_DEFAULT_ON=['bsn','dpt','mlt','radio'];
+const ALL_HEALTH=CATALOG.filter(p=>p.cat==='health').map(p=>p.id);
+const STEP_LABELS=['Investment','Programmes','Enrolment','Scholarships','Costs','Scenarios','Results'];
+
+/* ===== MUTABLE STATE ===== */
+let SEATS={}, INTAKE={}, SCHM={}, SCHF={}, COV={};
+CATALOG.forEach(p=>{SEATS[p.id]=50; SCHM[p.id]=SCH_DEFAULT[p.sch].m; SCHF[p.id]=SCH_DEFAULT[p.sch].f;});
+let EXP_SEQ=0;
+function eid(){return 'e'+(++EXP_SEQ);}
+/* Staffing roster — role, monthly salary, headcount per year. Reproduces the study's staffing plan. */
+let STAFF=[
+ {id:eid(),role:'Principal',monthly:300000,counts:[1,1,2,2,2]},
+ {id:eid(),role:'Permanent faculty',monthly:80000,counts:[5,7,8,10,12]},
+ {id:eid(),role:'Visiting faculty',monthly:50000,counts:[3,5,5,6,7]},
+ {id:eid(),role:'Lab assistants',monthly:40000,counts:[1,2,2,2,2]},
+ {id:eid(),role:'Computer lab assistants',monthly:40000,counts:[1,2,2,2,2]},
+ {id:eid(),role:'Admin clerks',monthly:40000,counts:[2,2,3,3,3]},
+ {id:eid(),role:'Sweepers',monthly:40000,counts:[2,2,2,2,2]},
+ {id:eid(),role:'Security guards',monthly:35000,counts:[2,2,2,2,2]},
+];
+let staffSwing=true;
+function staffBillYear(T){return STAFF.reduce((a,s)=>a+(s.monthly||0)*(s.counts[T-1]||0),0)*12;}
+function staffPeople(T){return STAFF.reduce((a,s)=>a+(s.counts[T-1]||0),0);}
+let EXPENSES=[
+ {id:eid(),label:'Rent',kind:'monthly',perMonth:750000,esc:8,escStart:3,swing:true},
+ {id:eid(),label:'Utilities',kind:'monthly',perMonth:700000,esc:0,escStart:1,swing:true},
+ {id:eid(),label:'Other / sundries',kind:'monthly',perMonth:200000,esc:0,escStart:1,swing:true},
+ {id:eid(),label:'Lab materials (health)',kind:'perStudent',amount:7000,scope:'health',swing:true},
+ {id:eid(),label:'Lab materials (non-health)',kind:'perStudent',amount:2000,scope:'nonhealth',swing:true},
+ {id:eid(),label:'Marketing',kind:'pctIncome',pct:3,minY1:2000000,swing:false},
+ {id:eid(),label:'EOBI & social security',kind:'fixed',amount:500000,swing:true},
+ {id:eid(),label:'Government retention',kind:'perProgramme',amount:165000,swing:false},
+ {id:eid(),label:'Top-scorer awards',kind:'perProgramme',amount:250000,swing:true},
+];
+const KINDS={annualEach:'Custom each year',monthly:'Monthly (×12), with escalation',perStudent:'Per student / year',pctIncome:'% of income',perProgramme:'Per programme / year',fixed:'Fixed / year',oneTimeYear:'One-time in a year'};
+
+/* ===== HELPERS ===== */
+const $=id=>document.getElementById(id);
+const num=id=>{const el=$(id);return el?parseFloat(el.value)||0:0;};
+const fmt0=n=>(n<0?'−':'')+Math.round(Math.abs(n)).toLocaleString('en-US');
+const fmt=n=>'PKR '+fmt0(n);
+const fM=n=>{const s=n<0?'−':'';const a=Math.abs(n);return s+(a>=1e7?(a/1e6).toFixed(0):(a/1e6).toFixed(1))+'M';};
+const pct=(n,d=1)=>(n*100).toFixed(d)+'%';
+const H=()=>Math.max(3,Math.min(8,Math.round(num('horizon'))));
+const activeIds=()=>CATALOG.filter(p=>{const c=$('on_'+p.id);return c&&c.checked;}).map(p=>p.id);
+function fitLen(arr,n,fill){while(arr.length<n)arr.push(fill);if(arr.length>n)arr.length=n;return arr;}
+
+/* ===== STATE RECONCILE ===== */
+function seedIntake(pid,h){const s=SEATS[pid]||0,y1=Math.round(s*num('fillY1')/100),st=Math.round(s*num('fillSteady')/100);const a=[y1];for(let i=1;i<h;i++)a.push(st);return a;}
+function reconcile(){
+  const h=H();
+  CATALOG.forEach(p=>{
+    if(!INTAKE[p.id]) INTAKE[p.id]=seedIntake(p.id,h); else fitLen(INTAKE[p.id],h, INTAKE[p.id][INTAKE[p.id].length-1]||0);
+    if(!COV[p.id]) COV[p.id]=[100].concat(Array(Math.max(0,h-1)).fill(70)); else fitLen(COV[p.id],h, COV[p.id][COV[p.id].length-1]||70);
+  });
+  EXPENSES.forEach(e=>{ if(e.kind==='annualEach'){ if(!e.values)e.values=[]; if(e.values.length<h)fitLen(e.values,h,e.values[e.values.length-1]||0); } });
+  STAFF.forEach(s=>{ if(!s.counts)s.counts=[]; fitLen(s.counts,h,s.counts[s.counts.length-1]||0); });
+}
+
+/* ===== BUILD STATIC UI ===== */
+function buildSteps(){$('steps').innerHTML=STEP_LABELS.map((l,i)=>`<div class="stepdot" data-jump="${i}"><div class="n">${i+1}</div><div class="t">${l}</div></div>`).join('');}
+function buildCatalogue(){
+  const depts=[...new Set(CATALOG.map(p=>p.dept))];
+  $('catalogue').innerHTML=depts.map(d=>{
+    const items=CATALOG.filter(p=>p.dept===d);
+    return `<div class="deptgroup"><div class="dh"><span>${d}</span><span class="seatlbl">seats (seed)</span></div>`+
+      items.map(p=>`<div class="prow off" id="prow_${p.id}"><input type="checkbox" id="on_${p.id}">
+        <label class="pn" for="on_${p.id}">${p.name} <span class="yrs">· ${p.years}yr</span><span class="fee">Full programme fee PKR ${p.tot}</span></label>
+        <input type="number" class="seats" id="seats_${p.id}" value="${SEATS[p.id]}" min="0" step="5"></div>`).join('')+`</div>`;
+  }).join('');
+  STUDY_DEFAULT_ON.forEach(id=>{const c=$('on_'+id);if(c)c.checked=true;});
+}
+buildSteps(); buildCatalogue();
+
+/* ===== BUILD DYNAMIC GRIDS ===== */
+function yearCols(h){let s='';for(let i=1;i<=h;i++)s+=`<th>Yr ${i}</th>`;return s;}
+function buildIntakeGrid(){
+  const h=H(), ids=activeIds();
+  if(ids.length===0){$('intakeGrid').innerHTML=`<tr><td style="padding:14px;color:var(--mut)">No programmes selected — go back to Step 2.</td></tr>`;return;}
+  let html=`<thead><tr><th>Programme</th>${yearCols(h)}</tr></thead><tbody>`;
+  ids.forEach(pid=>{const p=BYID[pid];
+    html+=`<tr><td>${p.name} <span style="color:var(--mut);font-weight:400">· ${p.years}yr</span></td>`;
+    for(let y=0;y<h;y++)html+=`<td><input class="cell" type="number" min="0" step="5" data-role="intake" data-pid="${pid}" data-yr="${y}" value="${INTAKE[pid][y]}"></td>`;
+    html+=`</tr>`;});
+  html+=`</tbody><tfoot><tr><td>Students on campus</td>${Array(h).fill(0).map((_,i)=>`<td id="oncampus_${i}">—</td>`).join('')}</tr></tfoot>`;
+  $('intakeGrid').innerHTML=html;
+}
+function buildScholGrid(){
+  const h=H(), ids=activeIds();
+  if(ids.length===0){$('scholGrid').innerHTML=`<tr><td style="padding:14px;color:var(--mut)">No programmes selected.</td></tr>`;return;}
+  let html=`<thead><tr><th>Programme</th><th>Male&nbsp;%</th><th>Female&nbsp;%</th>${Array(h).fill(0).map((_,i)=>`<th>Cov Yr ${i+1}</th>`).join('')}</tr></thead><tbody>`;
+  ids.forEach(pid=>{const p=BYID[pid];
+    html+=`<tr><td>${p.name}</td>
+      <td><input class="cell pc" type="number" min="0" max="100" data-role="schM" data-pid="${pid}" value="${SCHM[pid]}"></td>
+      <td><input class="cell pc" type="number" min="0" max="100" data-role="schF" data-pid="${pid}" value="${SCHF[pid]}"></td>`;
+    for(let y=0;y<h;y++)html+=`<td><input class="cell pc" type="number" min="0" max="100" data-role="cov" data-pid="${pid}" data-yr="${y}" value="${COV[pid][y]}"></td>`;
+    html+=`</tr>`;});
+  html+=`</tbody>`;
+  $('scholGrid').innerHTML=html;
+}
+function expEditor(e,h){
+  let f='';
+  if(e.kind==='annualEach'){f=`<div class="expyears">`+e.values.slice(0,h).map((v,i)=>`<label>Yr ${i+1}<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="values" data-yr="${i}" value="${v}"></label>`).join('')+`</div>`;}
+  else if(e.kind==='monthly'){f=`<div class="expyears"><label>Per month<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="perMonth" value="${e.perMonth}"></label><label>Escalation %<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="esc" value="${e.esc}"></label><label>Starts year<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="escStart" value="${e.escStart}"></label></div>`;}
+  else if(e.kind==='perStudent'){f=`<div class="expyears"><label>Amount / student<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="amount" value="${e.amount}"></label><label>Applies to<select class="sel" data-role="exp" data-eid="${e.id}" data-field="scope"><option value="health" ${e.scope==='health'?'selected':''}>Health students</option><option value="nonhealth" ${e.scope==='nonhealth'?'selected':''}>Non-health students</option><option value="all" ${e.scope==='all'?'selected':''}>All students</option></select></label></div>`;}
+  else if(e.kind==='pctIncome'){f=`<div class="expyears"><label>% of income<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="pct" value="${e.pct}"></label><label>Year-1 minimum<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="minY1" value="${e.minY1||0}"></label></div>`;}
+  else if(e.kind==='perProgramme'){f=`<div class="expyears"><label>Amount / programme / yr<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="amount" value="${e.amount}"></label></div>`;}
+  else if(e.kind==='fixed'){f=`<div class="expyears"><label>Amount / year<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="amount" value="${e.amount}"></label></div>`;}
+  else if(e.kind==='oneTimeYear'){f=`<div class="expyears"><label>Amount<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="amount" value="${e.amount||0}"></label><label>In year<input class="miniin" type="number" data-role="exp" data-eid="${e.id}" data-field="year" value="${e.year||1}"></label></div>`;}
+  return f;
+}
+function buildExpenses(){
+  const h=H();
+  $('expList').innerHTML=EXPENSES.map(e=>`<div class="exprow">
+    <div class="er1">
+      <input class="txt lbl" type="text" data-role="exp" data-eid="${e.id}" data-field="label" value="${e.label.replace(/"/g,'&quot;')}">
+      <select class="sel" data-role="expkind" data-eid="${e.id}">${Object.keys(KINDS).map(k=>`<option value="${k}" ${e.kind===k?'selected':''}>${KINDS[k]}</option>`).join('')}</select>
+      <label class="swtog"><input type="checkbox" data-role="expswing" data-eid="${e.id}" ${e.swing?'checked':''}> swings in best/worst</label>
+      <button class="del" data-role="expdel" data-eid="${e.id}">✕ remove</button>
+    </div>
+    <div class="er2">${expEditor(e,h)}</div>
+  </div>`).join('');
+}
+function buildStaffRoster(){
+  const h=H();
+  let html=`<thead><tr><th>Role / person</th><th>Monthly</th>${yearCols(h)}<th></th></tr></thead><tbody>`;
+  STAFF.forEach(s=>{
+    html+=`<tr><td><input class="txt" type="text" data-role="staffRole" data-sid="${s.id}" value="${(s.role||'').replace(/"/g,'&quot;')}"></td>
+      <td><input class="cell" style="width:92px" type="number" min="0" step="5000" data-role="staffMonthly" data-sid="${s.id}" value="${s.monthly}"></td>`;
+    for(let y=0;y<h;y++)html+=`<td><input class="cell" style="width:48px" type="number" min="0" step="1" data-role="staffCount" data-sid="${s.id}" data-yr="${y}" value="${s.counts[y]}"></td>`;
+    html+=`<td><button class="del" data-role="staffdel" data-sid="${s.id}">✕</button></td></tr>`;
+  });
+  html+=`</tbody><tfoot><tr><td>Total people</td><td></td>${Array(h).fill(0).map((_,i)=>`<td id="staffppl_${i}">—</td>`).join('')}<td></td></tr>
+    <tr><td>Salary bill / year</td><td></td>${Array(h).fill(0).map((_,i)=>`<td id="staffbill_${i}" style="font-size:11px">—</td>`).join('')}<td></td></tr></tfoot>`;
+  $('staffGrid').innerHTML=html;
+}
+function buildDynamic(){reconcile();buildStaffRoster();buildIntakeGrid();buildScholGrid();buildExpenses();}
+
+/* ===== ENGINE ===== */
+function computeBase(h,ids){
+  const students=Array(h).fill(0),health=Array(h).fill(0),nonh=Array(h).fill(0),fees=Array(h).fill(0),schol=Array(h).fill(0);
+  const fRatio=num('femaleRatio')/100;
+  ids.forEach(pid=>{const p=BYID[pid];const mPct=(SCHM[pid]||0)/100,fPct=(SCHF[pid]||0)/100;const blend=fRatio*fPct+(1-fRatio)*mPct;
+    for(let T=1;T<=h;T++){const cov=(COV[pid][T-1]||0)/100;
+      for(let sy=1;sy<=p.years;sy++){const entry=T-sy+1;if(entry<1||entry>h)continue;
+        const per=INTAKE[pid][entry-1]||0;const F=p.fee[sy-1];
+        fees[T-1]+=per*F;schol[T-1]+=per*F*cov*blend;students[T-1]+=per;
+        if(p.cat==='health')health[T-1]+=per;else nonh[T-1]+=per;}}});
+  return {students,health,nonh,fees,schol,revenue:fees.map((f,i)=>f-schol[i]),nProg:ids.length,h};
+}
+function expenseYear(e,T,ctx){
+  switch(e.kind){
+    case 'annualEach':{const i=Math.min(T-1,e.values.length-1);return e.values[i]||0;}
+    case 'monthly':{let m=e.perMonth||0;const esc=(e.esc||0)/100,st=e.escStart||1;if(esc&&T>=st)m=(e.perMonth||0)*Math.pow(1+esc,T-st+1);return m*12;}
+    case 'perStudent':{const a=e.scope==='health'?ctx.base.health:e.scope==='nonhealth'?ctx.base.nonh:ctx.base.students;return (a[T-1]||0)*(e.amount||0);}
+    case 'pctIncome':{if(T===1&&e.minY1)return e.minY1;return (e.pct||0)/100*(ctx.revenue[T-1]||0);}
+    case 'perProgramme':return (e.amount||0)*ctx.base.nProg;
+    case 'fixed':return e.amount||0;
+    case 'oneTimeYear':return T===(e.year||1)?(e.amount||0):0;
+    default:return 0;
+  }
+}
+function computeScenario(base,incMult,costMult,investment,taxRate){
+  const h=base.h,revenue=base.revenue.map(r=>r*incMult);
+  const ctx={base,revenue};
+  const totalCost=Array(h).fill(0);
+  // Salaries come from the staffing roster and lead the cost lines.
+  const salArr=Array(h).fill(0);
+  for(let T=1;T<=h;T++){let v=staffBillYear(T);if(staffSwing)v*=costMult;salArr[T-1]=v;totalCost[T-1]+=v;}
+  const costLines=[{label:'Salaries',arr:salArr,swing:staffSwing}];
+  EXPENSES.forEach(e=>{const arr=Array(h).fill(0);for(let T=1;T<=h;T++){let v=expenseYear(e,T,ctx);if(e.swing)v*=costMult;arr[T-1]=v;totalCost[T-1]+=v;}costLines.push({label:e.label,arr,swing:e.swing});});
+  const pbt=[],tax=[],pat=[];let loss=0;
+  for(let i=0;i<h;i++){const p=revenue[i]-totalCost[i];let t=0;if(p<=0){loss+=-p;}else{const off=Math.min(p,loss);loss-=off;t=taxRate*(p-off);}pbt.push(p);tax.push(t);pat.push(p-t);}
+  const total5=pat.reduce((a,b)=>a+b,0),cumul=[];let c=0;pat.forEach(v=>{c+=v;cumul.push(c);});
+  return {revenue,costLines,totalCost,pbt,tax,pat,total5,cumul,fees:base.fees,schol:base.schol,students:base.students,
+    roi:investment>0?total5/investment:0,irr:irr([-investment,...pat]),payback:payback(cumul,investment),y5margin:revenue[h-1]>0?pat[h-1]/revenue[h-1]:0};
+}
+function irr(cf){const f=r=>cf.reduce((a,c,t)=>a+c/Math.pow(1+r,t),0);let lo=-0.9,hi=5;if(f(lo)*f(hi)>0)return null;for(let k=0;k<100;k++){const mid=(lo+hi)/2;if(f(mid)>0){lo=mid;}else{hi=mid;}}return (lo+hi)/2;}
+function payback(cumul,inv){for(let i=0;i<cumul.length;i++){if(cumul[i]>=inv){const prev=i===0?0:cumul[i-1];const d=cumul[i]-prev;return i+(d>0?(inv-prev)/d:0);}}return null;}
+
+function computeAll(){
+  reconcile();
+  const h=H(),ids=activeIds();
+  if(ids.length===0)return {empty:true,h};
+  const base=computeBase(h,ids);
+  const inv=num('investment'),tax=num('taxRate')/100;
+  const incUp=num('incUp')/100,costDown=num('costDown')/100,incDown=num('incDown')/100,costUp=num('costUp')/100;
+  const scs={best:computeScenario(base,1+incUp,1-costDown,inv,tax),exp:computeScenario(base,1,1,inv,tax),worst:computeScenario(base,1-incDown,1+costUp,inv,tax)};
+  return {empty:false,h,ids,base,scs,inv,tax};
+}
+
+/* ===== CHARTS ===== */
+const C={navy:'#1f3a5f',navy2:'#2c5079',gold:'#c8a24a',goldd:'#a8842f',green:'#3f7d54',red:'#b0433c',grey:'#9aa7b4',mut:'#66707a',line:'#e2e6ea'};
+const svgOpen=(w,h)=>`<svg viewBox="0 0 ${w} ${h}" width="100%" style="max-width:${w}px;height:auto;font-family:inherit">`;
+const txt=(x,y,t,o={})=>`<text x="${x}" y="${y}" font-size="${o.s||11}" fill="${o.c||C.mut}" text-anchor="${o.a||'middle'}" ${o.b?'font-weight="700"':''}>${t}</text>`;
+function barProfit(scs,inv){
+  const w=680,h=300,pad={l:58,r:16,t:24,b:44},iw=w-pad.l-pad.r,ih=h-pad.t-pad.b;
+  const data=[scs.best.total5,scs.exp.total5,scs.worst.total5],cols=[C.green,C.navy,C.red],labels=['Best','Expected','Worst'];
+  const max=Math.max(...data,inv,1)*1.14,min=Math.min(0,...data);const y=v=>pad.t+ih-((v-min)/(max-min))*ih,gap=iw/3,bw=gap*0.5;
+  let g=svgOpen(w,h);
+  for(let k=0;k<=4;k++){const v=min+(max-min)*k/4,yy=y(v);g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${yy}" y2="${yy}" stroke="${C.line}"/>`+txt(pad.l-8,yy+3,fM(v),{a:'end'});}
+  g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${y(0)}" y2="${y(0)}" stroke="#c9ced3"/>`;
+  data.forEach((v,i)=>{const cx=pad.l+gap*i+gap/2,yy=y(Math.max(0,v)),y0=y(Math.min(0,v));g+=`<rect x="${cx-bw/2}" y="${Math.min(yy,y0)}" width="${bw}" height="${Math.abs(y0-yy)}" rx="3" fill="${cols[i]}"/>`+txt(cx,(v>=0?yy-7:y0+15),fM(v),{b:true,c:cols[i],s:13})+txt(cx,h-22,labels[i],{s:12,c:C.mut,b:true});});
+  const yl=y(inv);g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${yl}" y2="${yl}" stroke="${C.gold}" stroke-width="2" stroke-dasharray="7 5"/>`+txt(w-pad.r,yl-6,'Investment '+fM(inv),{a:'end',c:C.goldd,b:true,s:11});
+  return g+'</svg>';
+}
+function lineCumul(scs,inv,h){
+  const w=680,H2=310,pad={l:58,r:20,t:20,b:40},iw=w-pad.l-pad.r,ih=H2-pad.t-pad.b;
+  const series=[['worst',C.red],['exp',C.navy],['best',C.green]];let allv=[inv,0];series.forEach(([k])=>allv.push(...scs[k].cumul));
+  const max=Math.max(...allv)*1.08,min=Math.min(0,...allv);const X=i=>pad.l+(h<=1?0:iw*i/(h-1)),Y=v=>pad.t+ih-((v-min)/(max-min))*ih;
+  let g=svgOpen(w,H2);
+  for(let k=0;k<=4;k++){const v=min+(max-min)*k/4,yy=Y(v);g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${yy}" y2="${yy}" stroke="${C.line}"/>`+txt(pad.l-8,yy+3,fM(v),{a:'end'});}
+  for(let i=0;i<h;i++)g+=txt(X(i),H2-16,'Year '+(i+1),{s:11});
+  const yl=Y(inv);g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${yl}" y2="${yl}" stroke="${C.gold}" stroke-width="2" stroke-dasharray="7 5"/>`+txt(w-pad.r,yl-6,'Investment '+fM(inv),{a:'end',c:C.goldd,b:true,s:11});
+  series.forEach(([k,col])=>{const pts=scs[k].cumul.map((v,i)=>`${X(i)},${Y(v)}`).join(' ');g+=`<polyline points="${pts}" fill="none" stroke="${col}" stroke-width="2.5" ${k==='worst'?'stroke-dasharray="6 4"':''}/>`;scs[k].cumul.forEach((v,i)=>g+=`<circle cx="${X(i)}" cy="${Y(v)}" r="3.5" fill="${col}"/>`);});
+  return g+'</svg>';
+}
+function barIncome(exp,students,h){
+  const w=680,H2=300,pad={l:58,r:16,t:24,b:40},iw=w-pad.l-pad.r,ih=H2-pad.t-pad.b;
+  const max=Math.max(...exp.revenue,...exp.totalCost,1)*1.16,Y=v=>pad.t+ih-(v/max)*ih;const gw=iw/h,bw=gw*0.3,smax=Math.max(...students,1);
+  let g=svgOpen(w,H2);
+  for(let k=0;k<=4;k++){const v=max*k/4,yy=Y(v);g+=`<line x1="${pad.l}" x2="${w-pad.r}" y1="${yy}" y2="${yy}" stroke="${C.line}"/>`+txt(pad.l-8,yy+3,fM(v),{a:'end'});}
+  for(let i=0;i<h;i++){const cx=pad.l+gw*i+gw/2,r=exp.revenue[i],c=exp.totalCost[i];
+    g+=`<rect x="${cx-bw-2}" y="${Y(r)}" width="${bw}" height="${pad.t+ih-Y(r)}" rx="2.5" fill="${C.navy}"/><rect x="${cx+2}" y="${Y(c)}" width="${bw}" height="${pad.t+ih-Y(c)}" rx="2.5" fill="${C.grey}"/>`+txt(cx-bw/2-2,Y(r)-5,fM(r),{s:10.5,c:C.navy,b:true})+txt(cx+bw/2+2,Y(c)-5,fM(c),{s:10.5,c:C.mut,b:true})+txt(cx,H2-16,'Year '+(i+1),{s:11});}
+  const yl=v=>pad.t+ih-(v/(smax*1.18))*ih,pts=students.map((v,i)=>`${pad.l+gw*i+gw/2},${yl(v)}`).join(' ');
+  g+=`<polyline points="${pts}" fill="none" stroke="${C.gold}" stroke-width="2.5"/>`;students.forEach((v,i)=>{const cx=pad.l+gw*i+gw/2;g+=`<circle cx="${cx}" cy="${yl(v)}" r="3.5" fill="${C.gold}"/>`+txt(cx,yl(v)-8,Math.round(v),{s:10,c:C.goldd,b:true});});
+  return g+'</svg>';
+}
+
+/* ===== RENDER ===== */
+let currentPL='exp';
+function render(){
+  const r=computeAll();
+  CATALOG.forEach(p=>{const c=$('on_'+p.id),row=$('prow_'+p.id);if(c&&row)row.classList.toggle('off',!c.checked);});
+  const inv=num('investment');$('invReadout').textContent=inv>0?`= ${(inv/1e7).toLocaleString('en-US',{maximumFractionDigits:2})} crore`:'';
+  const warn=$('progWarn');if(warn)warn.style.display=r.empty?'block':'none';
+  if(r.empty){$('livebar').innerHTML='<span style="color:var(--red)">Select at least one programme</span>';if($('progTally'))$('progTally').innerHTML='<b style="color:var(--red)">No programmes selected.</b>';return;}
+  $('livebar').innerHTML=`Expected ${r.h}-yr profit so far: <b>${fmt(r.scs.exp.total5)}</b> &nbsp;·&nbsp; ROI <b>${pct(r.scs.exp.roi,0)}</b>`;
+  updateTallies(r); updateGridFooters(r); renderResults(r);
+}
+function updateGridFooters(r){
+  for(let i=0;i<r.h;i++){
+    const c=$('oncampus_'+i);if(c)c.textContent=Math.round(r.base.students[i]).toLocaleString();
+    const pe=$('staffppl_'+i);if(pe)pe.textContent=staffPeople(i+1);
+    const be=$('staffbill_'+i);if(be)be.textContent=fmt0(staffBillYear(i+1));
+  }
+}
+function updateTallies(r){
+  const s=r.base,h=r.h;
+  const seatsPerIntake=r.ids.reduce((a,pid)=>a+(INTAKE[pid][0]||0),0);
+  if($('progTally'))$('progTally').innerHTML=`<b>${r.ids.length}</b> programme${r.ids.length>1?'s':''} · reaches <b>${Math.round(s.students[h-1]).toLocaleString()}</b> students by Year ${h}.`;
+  if($('enrolTally'))$('enrolTally').innerHTML=`Campus grows to <b>${s.students.map(v=>Math.round(v)).join(' → ')}</b> students across ${h} years.`;
+  if($('scholTally'))$('scholTally').innerHTML=`Year 1 you give away <b>${fmt(s.schol[0])}</b> of <b>${fmt(s.fees[0])}</b> charged (${pct(s.schol[0]/(s.fees[0]||1),0)}). By Year ${h}: <b>${pct(s.schol[h-1]/(s.fees[h-1]||1),0)}</b>.`;
+  if($('costTally'))$('costTally').innerHTML=`${staffPeople(1)}→${staffPeople(h)} staff · ${EXPENSES.length+1} cost lines · Year 1 total <b>${fmt(r.scs.exp.totalCost[0])}</b> · Year ${h} total <b>${fmt(r.scs.exp.totalCost[h-1])}</b>.`;
+}
+function renderResults(r){
+  const {base,scs,h,inv,tax,ids}=r;
+  $('resTitle').textContent=`Your feasibility study — ${ids.length} programme${ids.length>1?'s':''}, ${h} years`;
+  $('setupline').textContent=`${Math.round(base.students[h-1]).toLocaleString()} students by Year ${h} · ${fmt(inv)} invested · tax ${pct(tax,0)}`;
+  const v=$('verdict'),wp=scs.worst.total5,ep=scs.exp.total5;
+  if(wp>=inv){v.className='verdict go';v.textContent='✓ Feasible — even the worst case returns your full investment';}
+  else if(ep>=inv){v.className='verdict warn';v.textContent='◐ Marginal — expected case works; worst case does not fully return';}
+  else if(ep>0){v.className='verdict warn';v.textContent='◐ Profitable but does not fully recover the investment in this horizon';}
+  else{v.className='verdict no';v.textContent='✕ Not feasible on these assumptions';}
+  const card=(cls,name,sc)=>{const pb=sc.payback==null?'—':sc.payback.toFixed(1)+' yr',ir=sc.irr==null?'—':pct(sc.irr,1);
+    return `<div class="rcard ${cls}"><div class="ct">${name}</div><div class="big">${fmt0(sc.total5)}</div><div class="cap">${h}-yr profit after tax · ROI ${pct(sc.roi,0)}</div>
+      <div class="mrow"><div><div class="v">${ir}</div><div class="l">IRR/yr</div></div><div><div class="v">${pb}</div><div class="l">Payback</div></div><div><div class="v">${pct(sc.y5margin,0)}</div><div class="l">Yr ${h} margin</div></div></div></div>`;};
+  $('cards').innerHTML=card('best','Best case',scs.best)+card('exp','Expected case',scs.exp)+card('worst','Worst case',scs.worst);
+  $('chartProfit').innerHTML=barProfit(scs,inv);$('chartCumul').innerHTML=lineCumul(scs,inv,h);$('chartIncome').innerHTML=barIncome(scs.exp,base.students,h);
+  const cp=(lab,f)=>`<tr><td>${lab}</td><td>${f(scs.best)}</td><td>${f(scs.exp)}</td><td>${f(scs.worst)}</td></tr>`;
+  $('compareTable').innerHTML=`<thead><tr><th>Measure</th><th>Best</th><th>Expected</th><th>Worst</th></tr></thead><tbody>
+    ${cp('Students, Year '+h,()=>Math.round(base.students[h-1]).toLocaleString())}
+    ${cp(h+'-yr profit after tax',sc=>fmt0(sc.total5))}
+    ${cp('Return on investment',sc=>pct(sc.roi,1))}
+    ${cp('Yearly return (IRR)',sc=>sc.irr==null?'—':pct(sc.irr,1))}
+    ${cp('Payback period',sc=>sc.payback==null?'> '+h+' yr':sc.payback.toFixed(1)+' yr')}
+    ${cp('Year '+h+' margin',sc=>pct(sc.y5margin,1))}</tbody>`;
+  renderPL(r);
+  const sc=scs[currentPL],y1=sc.pat[0];
+  $('plNote').innerHTML=`Year 1 ${y1<0?'loses':'earns'} <b>${fmt0(y1)}</b>. By Year ${h} the margin reaches <b>${pct(sc.y5margin,0)}</b>. Over ${h} years this scenario returns <b>${fmt0(sc.total5)}</b> on <b>${fmt0(inv)}</b> invested (${pct(sc.roi,0)} ROI).`;
+  renderFlags(r);
+}
+function renderPL(r){
+  const {base,scs,h}=r,sc=scs[currentPL],yrs=Array.from({length:h},(_,i)=>i+1);
+  const th=`<thead><tr><th>PKR</th>${yrs.map(y=>`<th>Year ${y}</th>`).join('')}<th>Total</th></tr></thead>`;
+  const sum=a=>a.reduce((x,y)=>x+y,0);
+  const line=(lab,arr,cls='')=>`<tr class="${cls}"><td>${lab}</td>${arr.map(v=>`<td>${fmt0(v)}</td>`).join('')}<td>${fmt0(sum(arr))}</td></tr>`;
+  const incMult=currentPL==='best'?1+num('incUp')/100:currentPL==='worst'?1-num('incDown')/100:1;
+  const marginArr=sc.pat.map((v,i)=>sc.revenue[i]>0?v/sc.revenue[i]:0);
+  let body=`<tbody><tr class="sub"><td>Students on campus</td>${base.students.map(v=>`<td>${Math.round(v).toLocaleString()}</td>`).join('')}<td>—</td></tr>
+    ${line('Fees charged (before scholarship)',sc.fees.map(v=>v*incMult))}
+    ${line('Less: scholarships given',sc.schol.map(v=>v*incMult))}
+    ${line('Revenue (money in)',sc.revenue,'rev')}`;
+  sc.costLines.forEach(cl=>{body+=line(cl.label,cl.arr);});
+  body+=`${line('Total costs',sc.totalCost,'strong')}${line('Profit before tax',sc.pbt,'strong')}${line('Tax',sc.tax)}${line('Profit after tax',sc.pat,'pat')}
+    <tr class="sub"><td>Profit margin</td>${marginArr.map(v=>`<td>${pct(v,1)}</td>`).join('')}<td>—</td></tr>
+    <tr class="sub"><td>Cumulative profit</td>${sc.cumul.map(v=>`<td>${fmt0(v)}</td>`).join('')}<td>—</td></tr></tbody>`;
+  $('plTable').innerHTML=th+body;
+}
+function renderFlags(r){
+  const {base,scs,h,tax}=r,y5=base.students[h-1],anyHealth=r.ids.some(pid=>BYID[pid].cat==='health'),f=[];
+  if(y5>700)f.push(`<li><span class="pill">CAPACITY</span>Year ${h} reaches <b>${Math.round(y5).toLocaleString()} students</b>. ~18,000 sq ft supports about 700 on a single shift — beyond that you need shifts or more space.</li>`);
+  const facultyRatio=(function(){const fac=STAFF.filter(s=>/faculty/i.test(s.role)).reduce((a,s)=>a+(s.counts[h-1]||0),0);return fac>0?Math.round(y5/fac):null;})();
+  f.push(`<li><span class="pill">FACULTY</span>Your roster has ${staffPeople(h)} staff for ${Math.round(y5).toLocaleString()} students in Year ${h}${facultyRatio?` (~1 faculty : ${facultyRatio} students)`:''}. Clinical programmes expect ~1:10 supervision — check the roster against that if you add seats.</li>`);
+  f.push(`<li><span class="pill">AFFILIATION</span>No university affiliation fee is included unless you added one. At 10–20% of income that's ${fmt0(scs.exp.revenue[h-1]*0.10)}–${fmt0(scs.exp.revenue[h-1]*0.20)} in Year ${h}.</li>`);
+  f.push(`<li><span class="pill">TAX</span>Tax is modelled at <b>${pct(tax,0)}</b> with Year-1 loss carryforward. If that isn't confirmed, the standard ~29% rate lowers returns.</li>`);
+  if(anyHealth)f.push(`<li><span class="pill">CLINICAL</span>Clinical charges inside later-semester fees count as income. If passed to the hospital, add a cost line to net them out.</li>`);
+  $('flags').innerHTML=f.join('');
+}
+
+/* ===== EVENT DELEGATION ===== */
+document.body.addEventListener('input',e=>{
+  const t=e.target,d=t.dataset||{};
+  if(d.role==='intake'){INTAKE[d.pid][+d.yr]=Math.max(0,parseFloat(t.value)||0);render();return;}
+  if(d.role==='cov'){COV[d.pid][+d.yr]=parseFloat(t.value)||0;render();return;}
+  if(d.role==='schM'){SCHM[d.pid]=parseFloat(t.value)||0;render();return;}
+  if(d.role==='schF'){SCHF[d.pid]=parseFloat(t.value)||0;render();return;}
+  if(d.role==='staffRole'){const s=STAFF.find(x=>x.id===d.sid);if(s)s.role=t.value;render();return;}
+  if(d.role==='staffMonthly'){const s=STAFF.find(x=>x.id===d.sid);if(s)s.monthly=Math.max(0,parseFloat(t.value)||0);render();return;}
+  if(d.role==='staffCount'){const s=STAFF.find(x=>x.id===d.sid);if(s)s.counts[+d.yr]=Math.max(0,parseFloat(t.value)||0);render();return;}
+  if(d.role==='exp'){const it=EXPENSES.find(x=>x.id===d.eid);if(it){if(d.field==='values'){it.values[+d.yr]=parseFloat(t.value)||0;}else if(d.field==='scope'||d.field==='label'){it[d.field]=t.value;}else{it[d.field]=parseFloat(t.value)||0;}}render();return;}
+  if(t.id&&(t.id.startsWith('seats_'))){SEATS[t.id.slice(6)]=Math.max(0,parseFloat(t.value)||0);render();return;}
+  render();
+});
+document.body.addEventListener('change',e=>{
+  const t=e.target,d=t.dataset||{};
+  if(d.role==='expkind'){const it=EXPENSES.find(x=>x.id===d.eid);if(it){it.kind=t.value;seedExpenseFields(it);}buildExpenses();render();return;}
+  if(d.role==='expswing'){const it=EXPENSES.find(x=>x.id===d.eid);if(it)it.swing=t.checked;render();return;}
+  if(t.id==='staffSwing'){staffSwing=t.checked;render();return;}
+  if(d.role==='exp'&&d.field==='scope'){const it=EXPENSES.find(x=>x.id===d.eid);if(it)it.scope=t.value;render();return;}
+  if(t.id==='on_'.length&&false){}
+  if(t.id&&t.id.startsWith('on_')){buildDynamic();render();return;}
+  if(t.id==='horizon'){buildDynamic();render();return;}
+});
+function seedExpenseFields(it){
+  const h=H();
+  if(it.kind==='annualEach'&&!it.values){it.values=Array(h).fill(0);}
+  if(it.kind==='annualEach'&&it.values.length<h)fitLen(it.values,h,it.values[it.values.length-1]||0);
+  if(it.kind==='monthly'){it.perMonth=it.perMonth||0;it.esc=it.esc||0;it.escStart=it.escStart||1;}
+  if(it.kind==='perStudent'){it.amount=it.amount||0;it.scope=it.scope||'all';}
+  if(it.kind==='pctIncome'){it.pct=it.pct||0;it.minY1=it.minY1||0;}
+  if(it.kind==='perProgramme'||it.kind==='fixed'){it.amount=it.amount||0;}
+  if(it.kind==='oneTimeYear'){it.amount=it.amount||0;it.year=it.year||1;}
+}
+document.body.addEventListener('click',e=>{
+  const t=e.target,d=t.dataset||{};
+  if(d.role==='expdel'){EXPENSES=EXPENSES.filter(x=>x.id!==d.eid);buildExpenses();render();}
+  if(d.role==='staffdel'){STAFF=STAFF.filter(x=>x.id!==d.sid);buildStaffRoster();render();}
+});
+$('addExpBtn').addEventListener('click',()=>{const it={id:eid(),label:'New cost',kind:'fixed',amount:0,swing:true};EXPENSES.push(it);buildExpenses();render();});
+$('addStaffBtn').addEventListener('click',()=>{STAFF.push({id:eid(),role:'New role',monthly:0,counts:Array(H()).fill(0)});buildStaffRoster();render();});
+$('reseedBtn').addEventListener('click',()=>{const h=H();activeIds().forEach(pid=>{INTAKE[pid]=seedIntake(pid,h);});buildIntakeGrid();render();});
+document.querySelectorAll('[data-preset]').forEach(b=>b.addEventListener('click',()=>{
+  const p=b.dataset.preset;CATALOG.forEach(prog=>{const c=$('on_'+prog.id);if(!c)return;
+    if(p==='study')c.checked=STUDY_DEFAULT_ON.includes(prog.id);else if(p==='allhealth')c.checked=ALL_HEALTH.includes(prog.id);else if(p==='all')c.checked=true;else if(p==='none')c.checked=false;});
+  buildDynamic();render();}));
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');currentPL=t.dataset.sc;render();}));
+
+/* ===== WIZARD NAV ===== */
+let step=0;const LAST=6;
+function goStep(i){
+  step=Math.max(0,Math.min(LAST,i));
+  buildDynamic();
+  document.querySelectorAll('.step').forEach(el=>el.classList.toggle('show',+el.dataset.step===step));
+  document.querySelectorAll('.stepdot').forEach((dd,idx)=>{dd.classList.toggle('active',idx===step);dd.classList.toggle('done',idx<step);});
+  $('backBtn').style.visibility=step===0?'hidden':'visible';
+  $('printBtn').style.display=step===LAST?'inline-block':'none';
+  const next=$('nextBtn');next.textContent=step===LAST?'✓ Done':step===LAST-1?'See my feasibility study →':'Next →';
+  window.scrollTo({top:0,behavior:'smooth'});render();
+}
+$('nextBtn').addEventListener('click',()=>{const r=computeAll();if(step===1&&r.empty){$('progWarn').style.display='block';return;}if(step<LAST)goStep(step+1);});
+$('backBtn').addEventListener('click',()=>goStep(step-1));
+document.querySelectorAll('.stepdot').forEach(dd=>dd.addEventListener('click',()=>{const target=+dd.dataset.jump;const r=computeAll();if(target>1&&r.empty){goStep(1);$('progWarn').style.display='block';return;}goStep(target);}));
+document.querySelectorAll('.edit').forEach(el=>el.addEventListener('click',()=>goStep(+el.dataset.goto)));
+$('startOver').addEventListener('click',()=>{if(confirm('Reset everything to the study defaults?'))location.reload();});
+$('printBtn').addEventListener('click',()=>{document.querySelectorAll('.step').forEach(el=>el.classList.add('show'));window.print();document.querySelectorAll('.step').forEach(el=>el.classList.toggle('show',+el.dataset.step===step));});
+
+$('stamp').textContent='Opened '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+goStep(0);
+</script>
+</body>
+</html>
