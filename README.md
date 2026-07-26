@@ -4,6 +4,9 @@ An interactive, step-by-step financial feasibility dashboard for the Ahbab Healt
 Institute (Islamabad). Built from the project's financial feasibility study and the
 Sarhad University Fee Structure 2025-26.
 
+**Live:** https://ahbab-feasibility-dashboard.vercel.app
+(auto-deploys from `main` on every push)
+
 ## What it does
 
 A single, self-contained HTML file (no build, no dependencies, works offline). A 7-step wizard:
